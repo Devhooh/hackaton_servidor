@@ -1,6 +1,8 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, computed_field
 from typing import List, Optional
 from datetime import datetime, timedelta
+from uuid import UUID
+from app.schemas.user_schema import UserOut
 
 class MeetingCreate(BaseModel):
     title: str
@@ -9,15 +11,30 @@ class MeetingCreate(BaseModel):
     participant_emails: List[EmailStr]
 
 class MeetingOut(BaseModel):
-    id: str
+    id: UUID
     title: str
     start_time: datetime
-    duration_minutes: int
-    organizer_email: EmailStr
-    participant_emails: List[EmailStr]
+    duration: timedelta
+    organizer: UserOut
+    participants: List[UserOut]
+
+    @computed_field
+    @property
+    def duration_minutes(self) -> int:
+        return int(self.duration.total_seconds() // 60)
+
+    @computed_field
+    @property
+    def organizer_email(self) -> EmailStr:
+        return self.organizer.email
+
+    @computed_field
+    @property
+    def participant_emails(self) -> List[EmailStr]:
+        return [p.email for p in self.participants]
 
     class Config:
-        from_attributes = True  # Pydantic v2
+        from_attributes = True
 
 class MeetingUpdate(BaseModel):
     title: Optional[str]

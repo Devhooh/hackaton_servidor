@@ -11,12 +11,15 @@ from app.services.meeting_service import (
     get_meeting,
     get_meetings,
     get_meetings_count,
-    get_meetings_today,
-    get_meetings_today_count,
+    get_meetings_today_for_user,
+    get_meetings_today_for_user_count,
+    get_meetings_for_user_paginated,
+    get_meetings_for_user_count,
     create_meeting,
     update_meeting,
     get_meeting_participants,
-    get_meetings_for_user
+    get_meetings_for_user_paginated,
+    get_meetings_for_user_count
 )
 from app.utils.response import response
 
@@ -62,14 +65,14 @@ async def get_meetings_today_route(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    meetings = get_meetings_today(db, skip, limit)
-    total = get_meetings_today_count(db)
+    meetings = get_meetings_today_for_user(db, current_user, skip, limit)
+    total = get_meetings_today_for_user_count(db, current_user)
 
     meetings_data = [MeetingOut.model_validate(m).model_dump() for m in meetings]
 
     return response(
         status_code=200,
-        message="Reuniones de hoy obtenidas exitosamente",
+        message="Reuniones de hoy del usuario obtenidas exitosamente",
         data=meetings_data,
         count_data=total,
     )
@@ -117,12 +120,15 @@ async def update_meeting_route(
         data=meeting_out
     )
 
-@router.get("/my")
+@router.get("/my", response_model=MeetingsPaginatedResponse)
 async def get_my_meetings_route(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(10, gt=0, le=100),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    meetings = get_meetings_for_user(db, current_user)
+    meetings = get_meetings_for_user_paginated(db, current_user, skip, limit)
+    total = get_meetings_for_user_count(db, current_user)
 
     meetings_data = []
     for m in meetings:
@@ -134,6 +140,6 @@ async def get_my_meetings_route(
     return response(
         status_code=200,
         message="Reuniones del usuario obtenidas correctamente",
-        data=meetings_data
+        data=meetings_data,
+        count_data=total
     )
-
