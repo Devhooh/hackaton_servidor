@@ -11,16 +11,19 @@ from app.utils.response import response
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
-@router.post("/register", response_model=UserOut)
+@router.post("/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):
     db_user = create_user(db, user)
-    
+
+    access_token = create_access_token(data={"sub": str(db_user.id)})
+
     user_data = UserRead.model_validate(db_user).model_dump()
-    return response(
-        status_code=201,
-        message="Usuario creado exitosamente",
-        data=user_data
-    )
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": user_data
+    }
 
 @router.post("/login")
 def login(user_data: UserLogin, db: Session = Depends(get_db)):
