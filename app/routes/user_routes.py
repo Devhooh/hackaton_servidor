@@ -10,7 +10,7 @@ from app.utils.response import response
 from app.auth.dependencies import get_current_user
 from app.models.user import User
 
-router = APIRouter(prefix="/users", tags=["users"])
+router = APIRouter(prefix="/users", tags=["Users"])
 
 # 🚀 Crea usuario (público)
 @router.post("/", status_code=status.HTTP_201_CREATED)

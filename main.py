@@ -1,11 +1,11 @@
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import user_routes, auth  
+from app.routes import user_routes, auth, meeting_routes
 from app.core.error_handlers import register_error_handlers
 from app.core.database import engine
 from app.models.user import Base
 
-app = FastAPI(title="Mi App con FastAPI y PostgreSQL")
+app = FastAPI(title="ACI")
 
 # Opcional: CORS para frontend local
 app.add_middleware(
@@ -19,6 +19,7 @@ app.add_middleware(
 api_router = APIRouter(prefix="/api")
 api_router.include_router(user_routes.router)
 api_router.include_router(auth.router)  
+api_router.include_router(meeting_routes.router)
 
 app.include_router(api_router)
 

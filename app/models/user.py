@@ -2,6 +2,7 @@ from sqlalchemy import Column, String, Enum as SQLAlchemyEnum
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 from app.schemas.enums import UserTypeEnum, GenderEnum
 
 Base = declarative_base()
@@ -15,3 +16,12 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     gender = Column(SQLAlchemyEnum(GenderEnum), nullable=False)
     user_type = Column(SQLAlchemyEnum(UserTypeEnum), nullable=False)
+
+    organized_meetings = relationship("Meeting", back_populates="organizer")
+
+    # reuniones en las que participa
+    meetings = relationship(
+        "Meeting",
+        secondary="meeting_participants",
+        back_populates="participants"
+    )
