@@ -4,9 +4,23 @@ from sqlalchemy import select, func
 from app.models.user import User
 from app.schemas.user_schema import UserCreate
 from uuid import UUID  
+from passlib.context import CryptContext
+
+# Configura el hasher
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def create_user(db: Session, user: UserCreate) -> User:
-    db_user = User(name=user.name, email=user.email)
+    # 🔐 Hashea la contraseña antes de guardarla
+    hashed_password = pwd_context.hash(user.password)
+
+    db_user = User(
+        name=user.name,
+        email=user.email,
+        gender=user.gender,
+        user_type=user.user_type,
+        hashed_password=hashed_password,
+    )
+    
     db.add(db_user)
     try:
         db.commit()

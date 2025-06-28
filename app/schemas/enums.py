@@ -1,9 +1,10 @@
+# app/schemas/enums.py
 from enum import Enum
 
 class UserTypeEnum(str, Enum):
-    HEARING = "hearing"
-    DEAF_MUTE = "deaf-mute"
+    hearing = "hearing"
+    deaf_mute = "deaf_mute"
 
 class GenderEnum(str, Enum):
-    MALE = "male"
-    FEMALE = "female"
+    male = "male"
+    female = "female"

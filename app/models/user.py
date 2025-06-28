@@ -13,5 +13,5 @@ class User(Base):
     name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
-    gender = Column(SQLAlchemyEnum(GenderEnum), nullable=True)
-    user_type = Column(SQLAlchemyEnum(UserTypeEnum), nullable=True)
+    gender = Column(SQLAlchemyEnum(GenderEnum), nullable=False)
+    user_type = Column(SQLAlchemyEnum(UserTypeEnum), nullable=False)

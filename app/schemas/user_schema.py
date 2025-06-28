@@ -8,7 +8,7 @@ class UserCreate(BaseModel):
     name: str
     email: EmailStr
     password: str
-    gender: GenderEnum | None = None
+    gender: GenderEnum
     user_type: UserTypeEnum
 
 #  Para login
@@ -21,7 +21,7 @@ class UserOut(BaseModel):
     id: UUID 
     name: str
     email: EmailStr
-    gender: GenderEnum | None = None
+    gender: GenderEnum
     user_type: UserTypeEnum
 
 
@@ -33,7 +33,7 @@ class UserRead(BaseModel):
     id: UUID
     name: str
     email: EmailStr
-    gender: GenderEnum | None = None
+    gender: GenderEnum
     user_type: UserTypeEnum
 
     model_config = {

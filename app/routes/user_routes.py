@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, status, Query, HTTPException
 from sqlalchemy.orm import Session
 from uuid import UUID
+import json
 
 from app.schemas.user_schema import UserCreate, UserRead, UsersPaginatedResponse
 from app.services.user_service import create_user, get_user, get_users, get_users_count
@@ -15,6 +16,7 @@ router = APIRouter(prefix="/users", tags=["users"])
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_user_route(user: UserCreate, db: Session = Depends(get_db)):
     db_user = create_user(db, user)
+    
     user_data = UserRead.model_validate(db_user).model_dump()
     return response(
         status_code=201,
