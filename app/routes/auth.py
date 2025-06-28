@@ -38,4 +38,4 @@ def login(user_data: UserLogin, db: Session = Depends(get_db)):
             detail="Credenciales incorrectas"
         )
     access_token = create_access_token(data={"sub": str(user.id)})
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer", "user": user}
