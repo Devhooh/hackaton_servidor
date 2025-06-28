@@ -1,10 +1,8 @@
-import asyncio
 from app.core.database import engine
 from app.models.user import Base
 
-async def init_models():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+def init_models():
+    Base.metadata.create_all(bind=engine)
 
 if __name__ == "__main__":
-    asyncio.run(init_models())
+    init_models()

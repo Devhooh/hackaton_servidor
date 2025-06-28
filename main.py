@@ -11,18 +11,13 @@ from app.models.user import Base  # importa tus modelos aquí
 app = FastAPI(title="Mi App con FastAPI y PostgreSQL")
 
 api_router = APIRouter(prefix="/api")
-
 api_router.include_router(user_routes.router)
-
 app.include_router(api_router)
 
 register_error_handlers(app)
 
-# Evento para crear tablas al iniciar el servidor
-@app.on_event("startup")
-async def on_startup():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+# Crea tablas automáticamente al importar
+Base.metadata.create_all(bind=engine)
 
 # Optional: manejador para errores de validación
 @app.exception_handler(RequestValidationError)
