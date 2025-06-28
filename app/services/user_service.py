@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select, func
 from app.models.user import User
 from app.schemas.user_schema import UserCreate
+from uuid import UUID  
 
 def create_user(db: Session, user: UserCreate) -> User:
     db_user = User(name=user.name, email=user.email)
@@ -11,11 +12,11 @@ def create_user(db: Session, user: UserCreate) -> User:
         db.commit()
         db.refresh(db_user)
         return db_user
-    except IntegrityError as e:
+    except IntegrityError:
         db.rollback()
         raise ValueError("El correo ya está registrado")
 
-def get_user(db: Session, user_id: int) -> User | None:
+def get_user(db: Session, user_id: UUID) -> User | None:  # 👈 Cambia int → UUID
     result = db.execute(select(User).where(User.id == user_id))
     return result.scalars().first()
 

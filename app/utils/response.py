@@ -1,4 +1,5 @@
 from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder  
 from typing import Any
 
 def response(
@@ -19,4 +20,5 @@ def response(
     if count_data is not None:
         resp["countData"] = count_data
 
-    return JSONResponse(content=resp, status_code=status_code)
+    
+    return JSONResponse(content=jsonable_encoder(resp), status_code=status_code)

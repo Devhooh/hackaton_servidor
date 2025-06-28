@@ -1,12 +1,30 @@
 from pydantic import BaseModel, EmailStr
 from typing import List
+from uuid import UUID
 
+#  Para registro
 class UserCreate(BaseModel):
     name: str
     email: EmailStr
+    password: str  
 
+#  Para login
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+#  Para leer usuario en respuestas (registro, perfil)
+class UserOut(BaseModel):
+    id: UUID 
+    name: str
+    email: EmailStr
+
+    class Config:
+        from_attributes = True
+
+#  Para paginación de usuarios (si aplicas en /users)
 class UserRead(BaseModel):
-    id: int
+    id: UUID
     name: str
     email: EmailStr
 
