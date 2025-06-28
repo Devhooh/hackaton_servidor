@@ -1,12 +1,15 @@
 from pydantic import BaseModel, EmailStr
 from typing import List
 from uuid import UUID
+from app.schemas.enums import UserTypeEnum, GenderEnum
 
 #  Para registro
 class UserCreate(BaseModel):
     name: str
     email: EmailStr
-    password: str  
+    password: str
+    gender: GenderEnum | None = None
+    user_type: UserTypeEnum
 
 #  Para login
 class UserLogin(BaseModel):
@@ -18,6 +21,9 @@ class UserOut(BaseModel):
     id: UUID 
     name: str
     email: EmailStr
+    gender: GenderEnum | None = None
+    user_type: UserTypeEnum
+
 
     class Config:
         from_attributes = True
@@ -27,6 +33,8 @@ class UserRead(BaseModel):
     id: UUID
     name: str
     email: EmailStr
+    gender: GenderEnum | None = None
+    user_type: UserTypeEnum
 
     model_config = {
         "from_attributes": True
