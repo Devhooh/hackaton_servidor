@@ -1,11 +1,10 @@
+# ✅ app/models/user.py
 from sqlalchemy import Column, String, Enum as SQLAlchemyEnum
-from sqlalchemy.ext.declarative import declarative_base
-import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from app.schemas.enums import UserTypeEnum, GenderEnum
-
-Base = declarative_base()
+from app.core.database import Base  # 👈 USA EL MISMO Base
+import uuid
 
 class User(Base):
     __tablename__ = "users"
@@ -18,10 +17,11 @@ class User(Base):
     user_type = Column(SQLAlchemyEnum(UserTypeEnum), nullable=False)
 
     organized_meetings = relationship("Meeting", back_populates="organizer")
-
-    # reuniones en las que participa
     meetings = relationship(
         "Meeting",
         secondary="meeting_participants",
         back_populates="participants"
     )
+
+# ✅ CIERRA EL CICLO SOLO SI HACE FALTA
+from app.models.meeting import Meeting

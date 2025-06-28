@@ -2,7 +2,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from sqlalchemy import select, func
 from app.models.user import User
-from app.schemas.user_schema import UserCreate
+from app.schemas.user_schema import UserCreate, UserUpdateType
 from uuid import UUID  
 from passlib.context import CryptContext
 
@@ -41,3 +41,12 @@ def get_users(db: Session, skip: int = 0, limit: int = 10):
 def get_users_count(db: Session):
     result = db.execute(select(func.count(User.id)))
     return result.scalar_one()
+def update_user_type(db: Session, user_id: UUID, update_data: UserUpdateType) -> User | None:
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        return None
+
+    user.user_type = update_data.user_type
+    db.commit()
+    db.refresh(user)
+    return user

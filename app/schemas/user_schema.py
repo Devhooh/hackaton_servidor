@@ -43,3 +43,6 @@ class UserRead(BaseModel):
 class UsersPaginatedResponse(BaseModel):
     data: List[UserRead]
     countData: int
+    
+class UserUpdateType(BaseModel):
+    user_type: UserTypeEnum

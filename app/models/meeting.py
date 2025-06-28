@@ -1,11 +1,11 @@
+# ✅ app/models/meeting.py
 from sqlalchemy import Column, String, DateTime, Interval, ForeignKey, Table
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+from app.core.database import Base  # 👈 USA EL MISMO Base
 import uuid
 
-Base = declarative_base()
-
+# Usa el mismo Base
 meeting_participants = Table(
     "meeting_participants",
     Base.metadata,
