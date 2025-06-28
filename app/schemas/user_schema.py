@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from typing import List
 
 class UserCreate(BaseModel):
     name: str
@@ -12,3 +13,7 @@ class UserRead(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+class UsersPaginatedResponse(BaseModel):
+    data: List[UserRead]
+    countData: int
