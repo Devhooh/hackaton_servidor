@@ -1,9 +1,12 @@
 from fastapi import FastAPI, APIRouter
-from app.routes import user_routes
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi import status
+
+from app.routes import user_routes
 from app.core.error_handlers import register_error_handlers
+from app.core.database import engine
+from app.models.user import Base  # importa tus modelos aquí
 
 app = FastAPI(title="Mi App con FastAPI y PostgreSQL")
 
@@ -14,6 +17,12 @@ api_router.include_router(user_routes.router)
 app.include_router(api_router)
 
 register_error_handlers(app)
+
+# Evento para crear tablas al iniciar el servidor
+@app.on_event("startup")
+async def on_startup():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
 
 # Optional: manejador para errores de validación
 @app.exception_handler(RequestValidationError)
